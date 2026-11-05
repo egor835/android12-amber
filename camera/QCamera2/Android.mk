@@ -46,6 +46,8 @@ ifeq ($(TARGET_SUPPORT_HAL1),false)
 LOCAL_CFLAGS += -DQCAMERA_HAL3_SUPPORT
 else
 LOCAL_CFLAGS += -DQCAMERA_HAL1_SUPPORT
+# QTI camera.h extensions were dropped from system/core in 19.1
+LOCAL_CFLAGS += -DVANILLA_HAL
 LOCAL_SRC_FILES += \
         HAL/QCamera2HWI.cpp \
         HAL/QCameraMuxer.cpp \
