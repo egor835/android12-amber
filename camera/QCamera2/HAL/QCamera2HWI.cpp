@@ -7332,6 +7332,7 @@ int32_t QCamera2HardwareInterface::processRTBData(cam_rtb_msg_type_t rtbData)
         pData[1] = (int)data_len;
         pData[2] = rtbData;
 
+#ifndef VANILLA_HAL
         qcamera_callback_argm_t cbArg;
         memset(&cbArg, 0, sizeof(qcamera_callback_argm_t));
         cbArg.cb_type = QCAMERA_DATA_CALLBACK;
@@ -7345,6 +7346,9 @@ int32_t QCamera2HardwareInterface::processRTBData(cam_rtb_msg_type_t rtbData)
             LOGE("fail sending notification");
             buffer->release(buffer);
         }
+#else
+        buffer->release(buffer);
+#endif
     }
     return rc;
 }
