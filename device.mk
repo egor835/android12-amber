@@ -617,3 +617,8 @@ PRODUCT_PACKAGES += \
     android.hardware.radio@1.4.vendor \
     android.system.net.netd@1.1.vendor \
     libgui_vendor
+
+# Recovery: trust the build host's adb key so recovery adb works without
+# tapping "Enable ADB" (auth stays on for every other host)
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/recovery/adb_keys:$(TARGET_COPY_OUT_RECOVERY)/root/adb_keys
