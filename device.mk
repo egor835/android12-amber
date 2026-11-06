@@ -27,6 +27,10 @@ AB_OTA_UPDATER := true
 # Enable updating of APEXes
 $(call inherit-product, $(SRC_TARGET_DIR)/product/updatable_apex.mk)
 
+# Kernel 4.4 dm-verity trips on APEXes decompressed to /data
+# ("dm-verity device corrupted" reboot on first boot); ship them uncompressed.
+PRODUCT_COMPRESSED_APEX := false
+
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += \
     $(LOCAL_PATH)/overlay \
