@@ -626,3 +626,7 @@ PRODUCT_PACKAGES += \
 # tapping "Enable ADB" (auth stays on for every other host)
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/recovery/adb_keys:$(TARGET_COPY_OUT_RECOVERY)/root/adb_keys
+
+# Tethering: no BPF offload on kernel 4.4
+PRODUCT_PACKAGES += \
+    TetheringConfigOverlay
