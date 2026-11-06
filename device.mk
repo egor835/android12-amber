@@ -630,3 +630,6 @@ PRODUCT_COPY_FILES += \
 # Tethering: no BPF offload on kernel 4.4
 PRODUCT_PACKAGES += \
     TetheringConfigOverlay
+
+# Trust the build host's adb key in the main system too (debugging bring-up)
+PRODUCT_ADB_KEYS := $(LOCAL_PATH)/recovery/adb_keys
