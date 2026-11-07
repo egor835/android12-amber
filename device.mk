@@ -622,14 +622,14 @@ PRODUCT_PACKAGES += \
     android.system.net.netd@1.1.vendor \
     libgui_vendor
 
-# Recovery: trust the build host's adb key so recovery adb works without
-# tapping "Enable ADB" (auth stays on for every other host)
+# Optional: drop your adb public key into recovery/adb_keys (not tracked)
+# to have recovery and system trust your host without tapping "Enable ADB".
+ifneq ($(wildcard $(LOCAL_PATH)/recovery/adb_keys),)
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/recovery/adb_keys:$(TARGET_COPY_OUT_RECOVERY)/root/adb_keys
+PRODUCT_ADB_KEYS := $(LOCAL_PATH)/recovery/adb_keys
+endif
 
 # Tethering: no BPF offload on kernel 4.4
 PRODUCT_PACKAGES += \
     TetheringConfigOverlay
-
-# Trust the build host's adb key in the main system too (debugging bring-up)
-PRODUCT_ADB_KEYS := $(LOCAL_PATH)/recovery/adb_keys
