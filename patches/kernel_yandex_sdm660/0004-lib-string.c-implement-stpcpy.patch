@@ -1,0 +1,44 @@
+From 3a5f6a4de80fc17e09cf5d1cd1537d4b1690f997 Mon Sep 17 00:00:00 2001
+From: builder <builder@localhost>
+Date: Thu, 5 Nov 2026 19:16:16 +0300
+Subject: [PATCH 4/6] lib/string.c: implement stpcpy
+
+clang 12 lowers sprintf(dst, "%s", src) into stpcpy(), which 4.4 lacks
+(backport of upstream 1e1b6d63d634).
+---
+ lib/string.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/lib/string.c b/lib/string.c
+index c7cf65ac..efaf0c1f 100644
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -235,6 +235,25 @@ ssize_t strscpy(char *dest, const char *src, size_t count)
+ EXPORT_SYMBOL(strscpy);
+ #endif
+ 
++/**
++ * stpcpy - copy a string from src to dest returning a pointer to the new end
++ *          of dest, including src's %NUL-terminator. May overrun dest.
++ * @dest: pointer to end of string being copied into. Must be large enough
++ *        to receive copy.
++ * @src: pointer to the beginning of string being copied from. Must not overlap
++ *       dest.
++ *
++ * Clang may lower sprintf(dst, "%s", src) to stpcpy(); provide it.
++ */
++char *stpcpy(char *__restrict__ dest, const char *__restrict__ src);
++char *stpcpy(char *__restrict__ dest, const char *__restrict__ src)
++{
++	while ((*dest++ = *src++) != '\0')
++		/* nothing */;
++	return --dest;
++}
++EXPORT_SYMBOL(stpcpy);
++
+ #ifndef __HAVE_ARCH_STRCAT
+ /**
+  * strcat - Append one %NUL-terminated string to another
+-- 
+2.56.0
+

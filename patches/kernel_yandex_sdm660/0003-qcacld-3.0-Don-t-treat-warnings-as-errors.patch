@@ -1,0 +1,26 @@
+From dfd3fb398a7de6b95548de5324c74c8d793e4e39 Mon Sep 17 00:00:00 2001
+From: builder <builder@localhost>
+Date: Thu, 5 Nov 2026 19:12:57 +0300
+Subject: [PATCH 3/6] qcacld-3.0: Don't treat warnings as errors
+
+clang 12 adds -Wvoid-pointer-to-enum-cast which trips the old driver.
+---
+ drivers/staging/qcacld-3.0/Kbuild | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/qcacld-3.0/Kbuild b/drivers/staging/qcacld-3.0/Kbuild
+index a0f0e2dc..53d6ea72 100644
+--- a/drivers/staging/qcacld-3.0/Kbuild
++++ b/drivers/staging/qcacld-3.0/Kbuild
+@@ -1272,7 +1272,7 @@ CDEFINES :=	-DANI_LITTLE_BYTE_ENDIAN \
+ 		-DANI_OS_TYPE_ANDROID=6 \
+ 		-DPTT_SOCK_SVC_ENABLE \
+ 		-Wall\
+-		-Werror\
++		-Wno-error\
+ 		-D__linux__ \
+ 		-DHAL_SELF_STA_PER_BSS=1 \
+ 		-DFEATURE_WLAN_WAPI \
+-- 
+2.56.0
+

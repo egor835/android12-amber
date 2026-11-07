@@ -1,0 +1,46 @@
+From 6cd90f0b2d34040a0da5eb60060076e3e6b58dc1 Mon Sep 17 00:00:00 2001
+From: builder <builder@localhost>
+Date: Sat, 7 Nov 2026 02:58:55 +0300
+Subject: [PATCH] netd: Don't require TrafficController on kernels older than
+ 4.9
+
+Without eBPF (pre-4.9 kernels) TrafficController can't start and netd
+crash-loops, stalling system_server at boot. Run without it; traffic
+accounting falls back to xt_qtaguid.
+
+Change-Id: I4bdd1810b911a15df489f04dbc928ac3f833dc0d
+---
+ server/Controllers.cpp | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/server/Controllers.cpp b/server/Controllers.cpp
+index 1f2bac2..fc4cdbe 100644
+--- a/server/Controllers.cpp
++++ b/server/Controllers.cpp
+@@ -27,6 +27,8 @@
+ #include <log/log.h>
+ 
+ #include "Controllers.h"
++
++#include "bpf/BpfUtils.h"
+ #include "IdletimerController.h"
+ #include "NetworkController.h"
+ #include "RouteController.h"
+@@ -282,7 +284,13 @@ void Controllers::init() {
+     clatdCtrl.init();
+     gLog.info("Initializing ClatdController: %" PRId64 "us", s.getTimeAndResetUs());
+ 
+-    netdutils::Status tcStatus = trafficCtrl.start();
++    // Kernels older than 4.9 lack the eBPF support TrafficController needs.
++    // Run without it there: traffic accounting falls back to xt_qtaguid.
++    const bool bpfCapable = android::bpf::isAtLeastKernelVersion(4, 9, 0);
++    netdutils::Status tcStatus = bpfCapable ? trafficCtrl.start() : netdutils::status::ok;
++    if (!bpfCapable) {
++        gLog.warn("Kernel older than 4.9, not starting traffic controller");
++    }
+     if (!isOk(tcStatus)) {
+         gLog.error("Failed to start trafficcontroller: (%s)", toString(tcStatus).c_str());
+         gLog.error("CRITICAL: sleeping 60 seconds, netd exiting with failure, crash loop likely!");
+-- 
+2.56.0
+

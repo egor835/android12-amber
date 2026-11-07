@@ -1,0 +1,38 @@
+From c0be9a237c0f28860bdabc11f4f984889b0693ed Mon Sep 17 00:00:00 2001
+From: builder <builder@localhost>
+Date: Sat, 7 Nov 2026 02:08:52 +0300
+Subject: [PATCH] bpfloader: Skip loading on kernels older than 4.9
+
+Platform BPF programs need >= 4.9 features; on 4.4 the critical tethering
+object fails verification and init reboots with 'bpfloader-failed'.
+
+Change-Id: I11e58574ba7a3f7736022d0c898b45dce8ccdb78
+---
+ bpfloader/BpfLoader.cpp | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/bpfloader/BpfLoader.cpp b/bpfloader/BpfLoader.cpp
+index 7a68894..3c6e90d 100644
+--- a/bpfloader/BpfLoader.cpp
++++ b/bpfloader/BpfLoader.cpp
+@@ -112,6 +112,17 @@ void createSysFsBpfSubDir(const char* const prefix) {
+ }
+ 
+ int main() {
++    // Kernels older than 4.9 lack the eBPF features the platform programs need
++    // (e.g. direct packet access); netd falls back to iptables on them anyway.
++    if (!android::bpf::isAtLeastKernelVersion(4, 9, 0)) {
++        ALOGI("Kernel older than 4.9, not loading BPF programs");
++        if (android::base::SetProperty("bpf.progs_loaded", "1") == false) {
++            ALOGE("Failed to set bpf.progs_loaded property");
++            return 1;
++        }
++        return 0;
++    }
++
+     // Load all ELF objects, create programs and maps, and pin them
+     for (const auto location : locations) {
+         createSysFsBpfSubDir(location.prefix);
+-- 
+2.56.0
+

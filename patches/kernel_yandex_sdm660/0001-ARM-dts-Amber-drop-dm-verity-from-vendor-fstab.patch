@@ -1,0 +1,71 @@
+From 2319ee90eb58be535ea75f59d8b637e2e2cc85ea Mon Sep 17 00:00:00 2001
+From: builder <builder@localhost>
+Date: Thu, 5 Nov 2026 17:33:35 +0300
+Subject: [PATCH 1/6] ARM: dts: Amber: drop dm-verity from vendor fstab
+
+Stock bootloader is AVB1 and TWRP mounts break vendor verity, which
+causes 'Your device is corrupt' and bootloops.
+
+Change-Id: I63f74cb3796c235a0f147b7f0a736ca276ff7a37
+---
+ arch/arm/boot/dts/qcom/msm8998.dtsi       | 2 +-
+ arch/arm/boot/dts/qcom/sdm630.dtsi        | 2 +-
+ arch/arm/boot/dts/qcom/sdm660.dtsi        | 2 +-
+ arch/arm/boot/dts/qcom/yandex/sdm630.dtsi | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/qcom/msm8998.dtsi b/arch/arm/boot/dts/qcom/msm8998.dtsi
+index ae664e48..b9f137ae 100644
+--- a/arch/arm/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm/boot/dts/qcom/msm8998.dtsi
+@@ -292,7 +292,7 @@
+ 					dev = "/dev/block/platform/soc/1da4000.ufshc/by-name/vendor";
+ 					type = "ext4";
+ 					mnt_flags = "ro,barrier=1,discard";
+-					fsmgr_flags = "wait,slotselect,verify";
++					fsmgr_flags = "wait,slotselect";
+ 					status = "ok";
+ 				};
+ 			};
+diff --git a/arch/arm/boot/dts/qcom/sdm630.dtsi b/arch/arm/boot/dts/qcom/sdm630.dtsi
+index fe5b5451..62a1629a 100644
+--- a/arch/arm/boot/dts/qcom/sdm630.dtsi
++++ b/arch/arm/boot/dts/qcom/sdm630.dtsi
+@@ -309,7 +309,7 @@
+ 					dev = "/dev/block/platform/soc/c0c4000.sdhci/by-name/vendor";
+ 					type = "ext4";
+ 					mnt_flags = "ro,barrier=1,discard";
+-					fsmgr_flags = "wait,slotselect,verify";
++					fsmgr_flags = "wait,slotselect";
+ 					status = "ok";
+ 				};
+ 			};
+diff --git a/arch/arm/boot/dts/qcom/sdm660.dtsi b/arch/arm/boot/dts/qcom/sdm660.dtsi
+index ed72eb0a..133d27f7 100644
+--- a/arch/arm/boot/dts/qcom/sdm660.dtsi
++++ b/arch/arm/boot/dts/qcom/sdm660.dtsi
+@@ -307,7 +307,7 @@
+ 					dev = "/dev/block/platform/soc/c0c4000.sdhci/by-name/vendor";
+ 					type = "ext4";
+ 					mnt_flags = "ro,barrier=1,discard";
+-					fsmgr_flags = "wait,slotselect,verify";
++					fsmgr_flags = "wait,slotselect";
+ 					status = "ok";
+ 				};
+ 			};
+diff --git a/arch/arm/boot/dts/qcom/yandex/sdm630.dtsi b/arch/arm/boot/dts/qcom/yandex/sdm630.dtsi
+index 45625210..6ef4be69 100644
+--- a/arch/arm/boot/dts/qcom/yandex/sdm630.dtsi
++++ b/arch/arm/boot/dts/qcom/yandex/sdm630.dtsi
+@@ -15,7 +15,7 @@
+ 		android {
+ 			fstab {
+ 				vendor {
+-					fsmgr_flags = "wait,verify,slotselect";
++					fsmgr_flags = "wait,slotselect";
+ 				};
+ 			};
+ 		};
+-- 
+2.56.0
+

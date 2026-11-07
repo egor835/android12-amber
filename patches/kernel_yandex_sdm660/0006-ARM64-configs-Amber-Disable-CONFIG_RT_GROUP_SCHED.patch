@@ -1,0 +1,27 @@
+From feab1d38647b75a50beeafc422016992de84f3b7 Mon Sep 17 00:00:00 2001
+From: builder <builder@localhost>
+Date: Sat, 7 Nov 2026 03:19:53 +0300
+Subject: [PATCH 6/6] ARM64: configs: Amber: Disable CONFIG_RT_GROUP_SCHED
+
+Android 12 places processes in cpu cgroups with zero RT budget, so any
+SCHED_FIFO request fails with EPERM (Bluetooth aborts in alarm init).
+---
+ arch/arm64/configs/lineageos_Amber_defconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/configs/lineageos_Amber_defconfig b/arch/arm64/configs/lineageos_Amber_defconfig
+index e6b5c560..a0a9fb18 100644
+--- a/arch/arm64/configs/lineageos_Amber_defconfig
++++ b/arch/arm64/configs/lineageos_Amber_defconfig
+@@ -21,7 +21,7 @@ CONFIG_CGROUP_FREEZER=y
+ CONFIG_CPUSETS=y
+ CONFIG_CGROUP_CPUACCT=y
+ CONFIG_CGROUP_SCHEDTUNE=y
+-CONFIG_RT_GROUP_SCHED=y
++# CONFIG_RT_GROUP_SCHED is not set
+ CONFIG_SCHED_HMP=y
+ CONFIG_SCHED_HMP_CSTATE_AWARE=y
+ CONFIG_SCHED_CORE_CTL=y
+-- 
+2.56.0
+

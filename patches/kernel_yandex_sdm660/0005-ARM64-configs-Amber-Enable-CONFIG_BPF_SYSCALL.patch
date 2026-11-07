@@ -1,0 +1,24 @@
+From 12cbe9c71378c2fd7785b8027f4032ee928c5d6a Mon Sep 17 00:00:00 2001
+From: builder <builder@localhost>
+Date: Sat, 7 Nov 2026 01:53:27 +0300
+Subject: [PATCH 5/6] ARM64: configs: Amber: Enable CONFIG_BPF_SYSCALL
+
+Android 12 bpfloader needs bpf() to create the tethering maps; without
+it the critical tethering object fails (-ENOSYS) and init reboots with
+'bpfloader-failed'. Programs requiring newer kernels are skipped.
+---
+ arch/arm64/configs/lineageos_Amber_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/configs/lineageos_Amber_defconfig b/arch/arm64/configs/lineageos_Amber_defconfig
+index 93f3b8c8..e6b5c560 100644
+--- a/arch/arm64/configs/lineageos_Amber_defconfig
++++ b/arch/arm64/configs/lineageos_Amber_defconfig
+@@ -708,3 +708,4 @@ CONFIG_PSTORE=y
+ CONFIG_PSTORE_CONSOLE=y
+ CONFIG_PSTORE_PMSG=y
+ CONFIG_PSTORE_RAM=y
++CONFIG_BPF_SYSCALL=y
+-- 
+2.56.0
+

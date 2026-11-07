@@ -1,0 +1,89 @@
+From 49a73f1cd1fb85e1d42c011d9eb2aa06f29e5aa3 Mon Sep 17 00:00:00 2001
+From: builder <builder@localhost>
+Date: Thu, 5 Nov 2026 17:33:35 +0300
+Subject: [PATCH] Amber: fix build on lineage-18.1
+
+- TimeService: use platform certificate.
+- Drop prebuilt vendor.qti.hardware.perf@1.0.so (built from source).
+- Disable check_elf_files for prebuilt shared libraries.
+---
+ Amber/Amber-vendor.mk | 2 --
+ Amber/Android.bp      | 7 ++++++-
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/Amber/Amber-vendor.mk b/Amber/Amber-vendor.mk
+index a42bb04..c909dc2 100644
+--- a/Amber/Amber-vendor.mk
++++ b/Amber/Amber-vendor.mk
+@@ -433,7 +433,6 @@ PRODUCT_COPY_FILES += \
+     vendor/yandex/Amber/proprietary/vendor/lib/vendor.qti.hardware.data.qmi@1.0.so:$(TARGET_COPY_OUT_VENDOR)/lib/vendor.qti.hardware.data.qmi@1.0.so \
+     vendor/yandex/Amber/proprietary/vendor/lib/vendor.qti.hardware.factory@1.0.so:$(TARGET_COPY_OUT_VENDOR)/lib/vendor.qti.hardware.factory@1.0.so \
+     vendor/yandex/Amber/proprietary/vendor/lib/vendor.qti.hardware.fm@1.0.so:$(TARGET_COPY_OUT_VENDOR)/lib/vendor.qti.hardware.fm@1.0.so \
+-    vendor/yandex/Amber/proprietary/vendor/lib/vendor.qti.hardware.perf@1.0.so:$(TARGET_COPY_OUT_VENDOR)/lib/vendor.qti.hardware.perf@1.0.so \
+     vendor/yandex/Amber/proprietary/vendor/lib/vendor.qti.hardware.radio.ims@1.0.so:$(TARGET_COPY_OUT_VENDOR)/lib/vendor.qti.hardware.radio.ims@1.0.so \
+     vendor/yandex/Amber/proprietary/vendor/lib/vendor.qti.hardware.radio.ims@1.1.so:$(TARGET_COPY_OUT_VENDOR)/lib/vendor.qti.hardware.radio.ims@1.1.so \
+     vendor/yandex/Amber/proprietary/vendor/lib/vendor.qti.hardware.radio.ims@1.2.so:$(TARGET_COPY_OUT_VENDOR)/lib/vendor.qti.hardware.radio.ims@1.2.so \
+@@ -624,7 +623,6 @@ PRODUCT_COPY_FILES += \
+     vendor/yandex/Amber/proprietary/vendor/lib64/vendor.qti.hardware.data.latency@1.0.so:$(TARGET_COPY_OUT_VENDOR)/lib64/vendor.qti.hardware.data.latency@1.0.so \
+     vendor/yandex/Amber/proprietary/vendor/lib64/vendor.qti.hardware.data.qmi@1.0.so:$(TARGET_COPY_OUT_VENDOR)/lib64/vendor.qti.hardware.data.qmi@1.0.so \
+     vendor/yandex/Amber/proprietary/vendor/lib64/vendor.qti.hardware.factory@1.0.so:$(TARGET_COPY_OUT_VENDOR)/lib64/vendor.qti.hardware.factory@1.0.so \
+-    vendor/yandex/Amber/proprietary/vendor/lib64/vendor.qti.hardware.perf@1.0.so:$(TARGET_COPY_OUT_VENDOR)/lib64/vendor.qti.hardware.perf@1.0.so \
+     vendor/yandex/Amber/proprietary/vendor/lib64/vendor.qti.hardware.radio.am@1.0.so:$(TARGET_COPY_OUT_VENDOR)/lib64/vendor.qti.hardware.radio.am@1.0.so \
+     vendor/yandex/Amber/proprietary/vendor/lib64/vendor.qti.hardware.radio.atcmdfwd@1.0.so:$(TARGET_COPY_OUT_VENDOR)/lib64/vendor.qti.hardware.radio.atcmdfwd@1.0.so \
+     vendor/yandex/Amber/proprietary/vendor/lib64/vendor.qti.hardware.radio.ims@1.0.so:$(TARGET_COPY_OUT_VENDOR)/lib64/vendor.qti.hardware.radio.ims@1.0.so \
+diff --git a/Amber/Android.bp b/Amber/Android.bp
+index 00c5fd6..3c0bd06 100644
+--- a/Amber/Android.bp
++++ b/Amber/Android.bp
+@@ -20,6 +20,7 @@ soong_namespace {
+ }
+ 
+ cc_prebuilt_library_shared {
++	check_elf_files: false,
+ 	name: "libantradio",
+ 	owner: "yandex",
+ 	strip: {
+@@ -38,6 +39,7 @@ cc_prebuilt_library_shared {
+ }
+ 
+ cc_prebuilt_library_shared {
++	check_elf_files: false,
+ 	name: "vendor.qti.hardware.fm@1.0",
+ 	owner: "yandex",
+ 	strip: {
+@@ -56,6 +58,7 @@ cc_prebuilt_library_shared {
+ }
+ 
+ cc_prebuilt_library_shared {
++	check_elf_files: false,
+ 	name: "libgpustats",
+ 	owner: "yandex",
+ 	strip: {
+@@ -75,6 +78,7 @@ cc_prebuilt_library_shared {
+ }
+ 
+ cc_prebuilt_library_shared {
++	check_elf_files: false,
+ 	name: "libsdm-disp-vndapis",
+ 	owner: "yandex",
+ 	strip: {
+@@ -130,7 +134,7 @@ android_app_import {
+ 	name: "TimeService",
+ 	owner: "yandex",
+ 	apk: "proprietary/vendor/app/TimeService/TimeService.apk",
+-	certificate: ":timeservice_app_cert-legacy-um",
++	certificate: "platform",
+ 	dex_preopt: {
+ 		enabled: false,
+ 	},
+@@ -213,6 +217,7 @@ dex_import {
+ }
+ 
+ cc_prebuilt_library_shared {
++	check_elf_files: false,
+ 	name: "libthermalclient",
+ 	owner: "yandex",
+ 	strip: {
+-- 
+2.56.0
+

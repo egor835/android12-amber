@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Drop into .repo/local_manifests/ of a lineage-19.1 checkout -->
+<manifest>
+  <remote name="amber" fetch="https://github.com/egor835" />
+  <remote name="muppets" fetch="https://github.com/TheMuppets" />
+
+  <!-- Device tree with lineage-19.1 bring-up (branch of this repo) -->
+  <project name="android12-amber" path="device/yandex/Amber" remote="amber" revision="lineage-19.1" />
+
+  <!-- Upstream lineage-18.1 kernel and blobs; patches/ are applied on top -->
+  <project name="LineageOS/android_kernel_yandex_sdm660" path="kernel/yandex/sdm660" remote="github" revision="lineage-18.1" />
+  <project name="proprietary_vendor_yandex" path="vendor/yandex" remote="muppets" revision="lineage-18.1" />
+</manifest>
